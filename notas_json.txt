@@ -1,0 +1,21 @@
+{ 
+  "id" : 0,
+  "razonSocial" : "colegio 1",
+  "filename" : "archivo colegio 1"
+}
+
+{ 
+  "id" : 0,
+  "idColegio" : 1,
+  "idDirector" : 0,
+  "idTutorConvivencia" : 0,
+  "idPsicologo" : 0,
+  "ugel" : "ugel 1",
+  "telefono" : "993311888",
+  "filename" : "sede 1",
+  "distrito" : "Lima",
+  "direccion" : "Direccion 1",
+  "correo" : "correo 1",
+  "web" : "web 1",
+  "mapa" : "mapa 1"
+}

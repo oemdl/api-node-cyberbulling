@@ -1,0 +1,11 @@
+/api/v1/admin
+
+    .get("/colegios" )          lista de colegios
+    .get("/colegio/:id" )       colegio x ID
+    .post("/colegio" )          guardar colegio
+
+    .get("/sedes/:id" )         lista de sedes x ID de colegio
+    .get("/sede/:id" )          sede x ID
+    .post("/sede" )             guardar sede
+
+
