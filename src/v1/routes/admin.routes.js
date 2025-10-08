@@ -12,4 +12,9 @@ router
     .get("/sede/:id", controller.getSede )
     .post("/sede", controller.setSede )
 
+    .get("/docentes/:id", controller.getDocentes )
+    .get("/docente/:id", controller.getDocente )
+    .post("/docentes", controller.setDocentes )
+    .post("/docente", controller.setDocente )
+
 export default router

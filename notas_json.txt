@@ -1,9 +1,11 @@
+// colegio
 { 
   "id" : 0,
   "razonSocial" : "colegio 1",
-  "filename" : "archivo colegio 1"
+  "imagen" : "archivo colegio 1"
 }
 
+// sede
 { 
   "id" : 0,
   "idColegio" : 1,
@@ -12,10 +14,71 @@
   "idPsicologo" : 0,
   "ugel" : "ugel 1",
   "telefono" : "993311888",
-  "filename" : "sede 1",
+  "imagen" : "sede 1",
   "distrito" : "Lima",
   "direccion" : "Direccion 1",
   "correo" : "correo 1",
   "web" : "web 1",
   "mapa" : "mapa 1"
 }
+
+// docente
+{
+  "id" : 0,
+  "idSede" : 1,
+  "nombres" : "Docente 101",
+  "apellidoPaterno" : "D101 APaterno",
+  "apellidoMaterno" : "D101 AMaterno",
+  "dni" : "11223101",
+  "passwordd" : "11223101",
+  "fechaNacimiento": "11/11/25", 
+  "correo" : "correo 101",
+  "telefono" : "998877101",
+  "nivel" : "I",
+  "imagen" : ""
+}
+
+// docente - cargar CSV
+{
+    "idSede" : 1,
+    "docentes" : [
+        {
+          "Nombres" : "Docente 1",
+          "ApellidoPaterno" : "D1 APaterno",
+          "ApellidoMaterno" : "D1 AMaterno",
+          "Dni" : "11223311",
+          "Passwordd" : "11223311",
+          "FechaNacimiento": "11/11/25", 
+          "Correo" : "correo 1",
+          "Telefono" : "998877611",
+          "Nivel" : "I",
+          "Imagen" : ""
+        },
+        {
+          "Nombres" : "Docente 2",
+          "ApellidoPaterno" : "D2 APaterno",
+          "ApellidoMaterno" : "D2 AMaterno",
+          "Dni" : "11223322",
+          "Passwordd" : "11223322",
+          "FechaNacimiento": "11/11/25", 
+          "Correo" : "correo 2",
+          "Telefono" : "998877622",
+          "Nivel" : "P",
+          "Imagen" : ""
+        },
+        {
+          "Nombres" : "Docente 3",
+          "ApellidoPaterno" : "D3 APaterno",
+          "ApellidoMaterno" : "D3 AMaterno",
+          "Dni" : "11223333",
+          "Passwordd" : "11223333",
+          "FechaNacimiento": "11/11/11", 
+          "Correo" : "correo 2",
+          "Telefono" : "998877633",
+          "Nivel" : "S",
+          "Imagen" : ""
+        }
+    ]
+}
+
+//

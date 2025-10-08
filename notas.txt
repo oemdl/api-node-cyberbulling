@@ -2,11 +2,3 @@ npm init -y
 npm install dotenv express multer mysql2
 npm i morgan nodemon -D
 npm run dev
-
-
-crear colegio -> { razonSocial, filename } -> { id, razonSocial, filename }
-crear sede -> { id, idColegio, ugel, telefono, filename, distrito, direccion, correo, web, mapa }
-
-docente : 
-    Nombres, ApellidoPaterno, ApellidoMaterno, Dni, Passwordd(igual Dni),FechaNacimiento, 
-    Correo, Telefono, Nivel(Inicail, Primaria, Secundaria)

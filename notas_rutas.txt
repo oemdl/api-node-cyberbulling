@@ -8,4 +8,8 @@
     .get("/sede/:id" )          sede x ID
     .post("/sede" )             guardar sede
 
+    .get("/docentes/:id" )      docentes x sedeID
+    .get("/docente/:id" )       docente x ID
+    .post("/docentes" )         guardar docentes 
+    .post("/docente" )          guardar docente
 

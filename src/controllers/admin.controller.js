@@ -48,7 +48,40 @@ const setSede = async (req, res) => {
     res.send( { success, data, message } )
 }
 
+const getDocentes = async (req, res) => {
+    const rows = await services.getDocentes(req, res)
+    const success = rows[0].length > 0
+    const data = success ? rows[0] : null
+    const message = success ? "Docentes registrados" : "No hay docentes registrados"
+    res.send( { success, data, message } )
+}
+
+const getDocente = async (req, res) => {
+    const rows = await services.getDocente(req, res)
+    const success = rows[0].length > 0
+    const data = success ? rows[0][0] : null
+    const message = success ? "Docente registrado" : "Docente no registrado"
+    res.send( { success, data, message } )
+}
+
+const setDocente = async (req, res) => {
+    const rows = await services.setDocente(req, res)
+    const success = rows.length > 0
+    const data = success ? rows[0] : null
+    const message = success ? "Docente registrado" : "No se pudo registrar al docente"
+    res.send( { success, data, message } )
+}
+
+const setDocentes = async (req, res) => {
+    const rows = await services.setDocentes(req, res)
+    const success = rows.length > 0
+    const data = success ? rows : null
+    const message = success ? "Docentes registrados" : "No se pudo registrar a los docentes"
+    res.send( { success, data, message } )
+}
+
 export const controller = {
     getColegios, getColegio, setColegio,
-    getSedes, getSede, setSede,   
+    getSedes, getSede, setSede,
+    getDocentes, getDocente, setDocente, setDocentes,
 }
