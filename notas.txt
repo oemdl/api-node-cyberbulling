@@ -1,4 +1,5 @@
 npm init -y
-npm install dotenv express multer mysql2
+npm install dotenv express multer mysql2 cors
 npm i morgan nodemon -D
 npm run dev
+npm run start

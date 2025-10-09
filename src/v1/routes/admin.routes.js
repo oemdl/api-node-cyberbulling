@@ -17,4 +17,6 @@ router
     .post("/docentes", controller.setDocentes )
     .post("/docente", controller.setDocente )
 
+    .post("/director", controller.setDirector )
+
 export default router

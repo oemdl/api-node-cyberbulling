@@ -17,7 +17,7 @@ create table Sede(
 	Telefono char(20),
     Imagen char(50),
     Distrito char(30) not null,
-    Dirección char(100) not null,
+    Direccion char(100) not null,
     Correo char(100) not null,
     Web char(100) not null,
     Mapa char(100) not null );
@@ -34,8 +34,45 @@ create table Docente(
     Correo char(100) not null,
     Telefono char(20) not null,
     Nivel char(1) not null,
+    Cargo char(1) not null,
     Imagen char(50) );
 
+create table Grupo(
+	id int primary key auto_increment,
+    idSede int references Sede(id),
+    idTutor int,
+    Nivel char(1) not null,			-- I, P, S -> Inicial, Primaria, Secundaria
+    Grado char(1) not null,			-- I: 3,4,5 , P: 1..6, S: 1..5
+    Seccion char(1) not null,		-- A,B,C
+    Turno char(1) not null );		-- M, T -> Mañana, Tarde
+
+create table Apoderado(
+	id int primary key auto_increment,
+    Nombres char(30) not null,
+    ApellidoPaterno char(30) not null,
+    ApellidoMaterno char(30) not null,
+    Dni char(8) not null,
+    Correo char(100),
+    Telefono char(20) not null );
+
+create table Alumno(
+	id int primary key auto_increment,
+    idGrupo int references Grupo(id),
+    idApoderado int,
+    Tipo char(1),									-- P, M, H, T, A -> Padre, Madre, Hermano(a), Tio(a), Abuelo(a)
+    Nombres char(30) not null,
+    ApellidoPaterno char(30) not null,
+    ApellidoMaterno char(30) not null,
+    Dni char(8),
+    FechaNacimiento date not null,
+    Correo char(100),
+    Telefono char(20),
+    TikTok char(30),
+    Facebook char(30),
+    WhatsApp char(30),
+    Imagen char(50) );
+
+-- Colegio
 
 create procedure sp_getColegios()
 	select * from Colegio order by id;
@@ -43,76 +80,258 @@ create procedure sp_getColegios()
 create procedure sp_getColegio(in _id int)
 	select * from Colegio where id = _id;
 
-create procedure sp_getColegioByRazonSocial(in _razonSocial char(100))
-	select * from Colegio where RazonSocial = _razonSocial;
+-- Sede
 
 create procedure sp_getSede(in _id int)
 	select * from Sede where id = _id;
-
-create procedure sp_getSedeByDistrito(in _distrito char(30))
-	select * from Sede where Distrito = _distrito;
     
 create procedure sp_getSedes(in _id int)
 	select * from Sede where idColegio = _id;
+    
+-- Docente
 
 create procedure sp_getDocente(in _id int)
 	select * from Docente where id = _id;
-
+ 
 create procedure sp_getDocenteByDni(in _dni char(8))
 	select * from Docente where Dni = _dni;
 
 create procedure sp_getDocentes(in _idSede int)
 	select * from Docente where idSede = _idSede;
 
+create procedure sp_setDocenteByCargo(in _id int, in _cargo char(1) )
+	update Docente set Cargo = _cargo where id = _id;
+
+-- Grupo
+
+create procedure sp_getGrupo(in _id int)
+	select * from Grupo where id = _id;
+
+create procedure sp_getGrupoBySede(in _idSede int)
+	select * from Grupo where id = _idSede;
+
+-- Apoderado
+
+create procedure sp_getApoderado(in _id int)
+	select * from Apoderado where id = _id;
+    
+
+-- Guardar
+
 delimiter //
 create procedure sp_setColegio(in _id int, in _razonSocial char(100), in _imagen char(50) )
-	begin
-		declare _count int;
-        select count(*) into _count from Colegio where RazonSocial = _razonSocial;
-        if ( _id = 0 and _count = 0 ) then
-			insert Colegio values ( null, _razonSocial, _imagen );
-		  else update Colegio set RazonSocial = _razonSocial, Imagen = _imagen where id = _id;
-		end if;
-    end;
+	if ( _id = 0 ) then
+		begin
+			declare _count int;
+			select count(*) into _count from Colegio where RazonSocial = _razonSocial;
+			if ( _count = 0 ) then
+				insert Colegio values ( null, _razonSocial, _imagen );
+				select last_insert_id() as insertID;
+			  else select "Razón Social ya está registrado" as 'error';
+			end if;
+		end;			
+	  else 
+        begin
+			update Colegio set RazonSocial = _razonSocial, Imagen = _imagen where id = _id;
+			if ( row_count() = 0 ) then
+				select "Colegio no esta registrado" as 'error';
+            end if;
+		end;   
+	end if;    
 //
 
 delimiter //
 create procedure sp_setSede(in _id int, in _idColegio int, in _idDirector int, in _idTutorConvivencia int, in _idPsicologo int, in _ugel char(20),
 							in _telefono char(20), in _imagen char(50), in _distrito char(30), in _direccion char(100), in _correo char(100),
                             in _web char(20), in _mapa char(100) )
-	begin
-		declare _count int;
-        select count(*) into _count from Sede where Distrito = _distrito;
-        if ( _id = 0 and _count = 0 ) then
-			insert Sede values ( null, _idColegio, _idDirector, idTutorConvivencia, _idPsicologo, _ugel, _telefono, _imagen, _distrito, _direccion, _correo, _web, _mapa );
-		  else update Colegio set UGEL = _ugel, Telefono = _telefono, Imagen = _imagen, Distrito = _distrito,
-								  Direccion = _direccion, Correo = _correo, Web = _web, Mapa = _mapa
-							  where id = _id;
-		end if;
-    end;
+	if ( _id = 0 ) then
+		begin
+			declare _count int;
+			select count(*) into _count from Sede where Distrito = _distrito;
+			if ( _count = 0 ) then
+				insert Sede values ( null, _idColegio, _idDirector, idTutorConvivencia, _idPsicologo, _ugel, _telefono, _imagen, _distrito, _direccion, _correo, _web, _mapa );
+                select last_insert_id() as insertID;
+			  else select "Sede ya está registrado" as 'error';
+			end if;
+        end;
+	  else 
+		begin
+			update Sede set idColegio = _idColegio, idDirector = _idDirector, idTutorConvivencia = _idTutorConvivencia, idPsicologo = _idPsicologo, UGEL = _ugel,
+                            Telefono = _telefono, Imagen = _imagen, Distrito = _distrito, Direccion = _direccion, Correo = _correo, Web = _web, Mapa = _mapa
+						where id = _id;
+			if ( row_count() = 0 ) then
+				select "Sede no esta registrada" as 'error';
+            end if;
+		end;
+    end if;
 //
     
 delimiter //
 create procedure sp_setDocente(in _id int, in _idSede int, in _nombres char(20), in _apellidoPaterno char(30), in _apellidoMaterno char(30), in _dni char(8),
-		in _passwordd char(20), in _fechaNacimiento date, in _correo char(100), in _telefono char(20), in _nivel char(1), in _imagen char(50) )
-	begin
-		declare _count int;
-        select count(*) into _count from Docente where idSede = _idSede and Dni = _dni;
-        if ( _id = 0 and _count = 0 ) then
-			insert Docente values ( null, _idSede, _nombres, _apellidoPaterno, _apellidoMaterno, _dni, _passwordd, _fechaNacimiento, _correo, _telefono, _nivel, _imagen );
-		  else update Docente set Nombres = _nombres, ApellidoPaterno = _apellidoPaterno, ApellidoMaterno = _apellidoMaterno, Dni = _dni, Passwordd = _passwordd,
-								  FechaNacimiento = _fechaNacimiento, Correo = _correo, Telefono = _telefono, Nivel = _nivel, Imagen = _imagen
-							  where id = _id;
-		end if;
-    end;
+		in _passwordd char(20), in _fechaNacimiento date, in _correo char(100), in _telefono char(20), in _nivel char(1), in _cargo char(1), in _imagen char(50) )
+	if ( _id = 0 ) then
+		begin
+			declare _count int;
+			select count(*) into _count from Sede where id = _idSede;
+            if ( _count = 0 ) then
+				select "Sede no está registrada" as 'error';
+            end if;
+            
+            select count(*) into _count from Docente where idSede = _idSede and Dni = _dni;
+			if ( _count = 0 ) then
+				insert Docente values ( null, _idSede, _nombres, _apellidoPaterno, _apellidoMaterno, _dni, _passwordd, _fechaNacimiento, _correo, _telefono, _nivel, _cargo, _imagen );
+                select last_insert_id() as insertID;
+			  else select "Docente ya está registrado" as 'error';
+			end if;
+        end;
+	  else 
+		begin
+			update Docente set Nombres = _nombres, ApellidoPaterno = _apellidoPaterno, ApellidoMaterno = _apellidoMaterno, Dni = _dni, Passwordd = _passwordd,
+							   FechaNacimiento = _fechaNacimiento, Correo = _correo, Telefono = _telefono, Nivel = _nivel, Cargo = _cargo, Imagen = _imagen
+						   where id = _id;
+			if ( row_count() = 0 ) then
+				select "Docente no esta registrado" as 'error';
+            end if;
+		end;
+    end if;
 //
 
+delimiter //
+create procedure sp_setSedeGrupo(in _id int, in _idSede int, in _idTutor int, in _nivel char(1), in _grado char(1), in _seccion char(1), in _turno char(1) )
+	if ( _id = 0 ) then
+		begin
+			declare _count int;
+			select count(*) into _count from Sede where id = _idSede;
+            if ( _count = 0 ) then
+				select "Sede no está registrada" as 'error';
+            end if;
+            
+            select count(*) into _count from Grupo where idSede = _idSede and Nivel = _nivel and Grado = _grado and Seccion = _seccion and Turno = _turno;
+			if ( _count = 0 ) then
+				insert Grupo values ( null, _idSede, _idTutor, _nivel, _grado, _seccion, _turno );
+                select last_insert_id() as insertID;
+			  else select "Grupo ya está registrado" as 'error';
+			end if;
+        end;
+	  else 
+		begin
+			declare _count int;
+            select count(*) into _count from Grupo where idSede = _idSede and Nivel = _nivel and Grado = _grado and Seccion = _seccion and Turno = _turno;
+            if ( _count = 0 ) then
+				update Grupo set idSede = _idSede, idTutor = _idTutor, Nivel = _nivel, Grado = _grado, Seccion = _seccion, Turno = _turno where id = _id;
+				if ( row_count() = 0 ) then
+					select "Grupo no esta registrado" as 'error';
+				end if;
+              else select "Grupo ya esta registrado" as 'error';  
+			end if;
+		end;
+    end if;
+//
+
+delimiter //
+create procedure sp_setApoderado(in _id int, in _nombres char(30), in _apellidoPaterno char(30), in _apellidoMaterno char(30), 
+								 in _dni char(8), in _correo char(100), in _telefono char(20) )
+	if ( _id = 0 ) then
+		begin
+            declare _count int;
+			select count(*) into _count from Apoderado where Dni = _dni;
+			if ( _count = 0 ) then
+				insert Apoderado values ( null, _nombres, _apellidPaterno, _apellidoMaterno, _dni, _correo, _telefono );
+                select last_insert_id() as insertID;
+			  else select "Apoderado ya está registrado" as 'error';
+			end if;
+        end;
+	  else 
+		begin
+			update Apoderado set Nombres = _nombres, ApellidoPaterno = _apellidoPaterno, ApellidoMaterno = _apellidoMaterno, Dni = _dni, Correo = _correo, Telefono = _telefono where id = _id;
+			if ( row_count() = 0 ) then
+				select "Apoderado no esta registrado" as 'error';
+            end if;
+		end;
+    end if;
+//
+
+delimiter //
+create procedure sp_setAlumno(in _id int, in _idGrupo int, in _idApoderado int, in _tipo char(1), in _nombres char(30), in _apellidoPaterno char(30), in _apellidoMaterno char(30),
+								 in _dni char(8), in _fechaNacimiento date, in _correo char(100), in _telefono char(20),
+                                 in _tikTok char(30), in _facebook char(30), in whatsApp char(30), in _imagen char(50) )
+	if ( _id = 0 ) then
+		begin
+			declare _count int;
+			select count(*) into _count from Grupo where id = _idGrupo;
+            if ( _count = 0 ) then
+				select "Grupo no está registrado" as 'error';
+            end if;
+            
+            select count(*) into _count from Alumno where Dni = _dni;
+			if ( _count = 0 ) then
+				insert Alumno values ( null, _idGrupo, _idApoderado, _tipo, _nombres, _apellidPaterno, _apellidoMaterno, _dni, _fechaNacimiento, _correo, _telefono, _tikTok, _facebook, _whatsApp, _imagen );
+                select last_insert_id() as insertID;
+			  else select "Alumno ya está registrado" as 'error';
+			end if;
+        end;
+	  else 
+		begin
+			update Alumno set idGrupo = _idGrupo, idApoderado = _idApoderado, Tipo = _tipo,
+								 Nombres = _nombres, ApellidoPaterno = _apellidoPaterno, ApellidoMaterno = _apellidoMaterno,
+                                 Dni = _dni, FechaNacimiento = _fechaNacimiento, Correo = _correo, Telefono = _telefono,
+                                 TikTok = _tikTok, Facebook = _facebook, WhatsApp = _whatsApp, Imagen = _imagen 
+							where id = _id;
+			if ( row_count() = 0 ) then
+				select "Grupo no esta registrado" as 'error';
+            end if;
+		end;
+    end if;
+//
+
+delimiter //
+create procedure sp_setSedeByDirector(in _idSede int, in _idDocente int)
+	begin
+		update Sede set idDirector = _idDocente where id = _idSede;
+        if ( row_count() = 0 ) then
+			select "Director no se registro" as 'error';
+        end if;
+	end;
+//
+
+delimiter //
+create procedure sp_setSedeByTutorConvivencia(in _idSede int, in _idDocente int)
+	begin
+		update Sede set idTutorConvicencia = _idDocente where id = _idSede;
+        if ( row_count() = 0 ) then
+			select "Tutor de Convivencia no se registro" as 'error';
+        end if;
+	end;
+//
+
+delimiter //
+create procedure sp_setSedeByPsicologo(in _idSede int, in _idDocente int)
+	begin
+		update Sede set idPsicologo = _idDocente where id = _idSede;
+		if ( row_count() = 0 ) then
+			select "Psicologo no se registro" as 'error';
+        end if;
+	end;
+//
+
+delimiter //
+create procedure sp_setGrupoByTutor(in _idGrupo int, in _idDocente int)
+	begin
+		update Grupo set idTutor = _idDocente where id = _idGrupo;
+		if ( row_count() = 0 ) then
+			select "Tutor no se registro" as 'error';
+        end if;
+	end;
+//
+
+-- use cyberbulling
 -- call sp_getColegios()
 -- call sp_getColegioByRazonSocial('colegio 3')
--- call sp_setColegio(0,'C1','A1')
+-- call sp_setColegio(0,'colegio 4','imagen colegio 4')
 -- call sp_getSedes(1)
 -- call sp_getSedeByDistrito('Lima')
--- call sp_getDocentes(1)
+-- call sp_getDocentes(2)
 -- call sp_getDocente(12)
+-- call sp_getDocenteByDni('11223311')
 
 -- select * from Sede

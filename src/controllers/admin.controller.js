@@ -18,9 +18,9 @@ const getColegio = async (req, res) => {
 
 const setColegio = async (req, res) => {
     const rows = await services.setColegio(req, res)
-    const success = rows.length > 0
-    const data = success ? rows[0] : null
-    const message = success ? "Colegio registrado" : "No se pudo registrar el colegio"
+    const success = rows.id || rows.update ? true : false
+    const data = rows.id ? rows : null
+    const message =  rows.id ? "Colegio registrado" : rows.update ? "Colegio actualizado" : rows.error ? rows.error : "No se pudo registrar el colegio"
     res.send( { success, data, message } )
 }
 
@@ -42,9 +42,9 @@ const getSede = async (req, res) => {
 
 const setSede = async (req, res) => {
     const rows = await services.setSede(req, res)
-    const success = rows.length > 0
-    const data = success ? rows[0] : null
-    const message = success ? "Sede registrado" : "No se pudo registrar la sede"
+    const success = rows.id || rows.update ? true : false
+    const data = rows.id ? rows : null
+    const message =  rows.id ? "Sede registrada" : rows.update ? "Sede actualizada" : rows.error ? rows.error : "No se pudo registrar la sede"
     res.send( { success, data, message } )
 }
 
@@ -66,9 +66,9 @@ const getDocente = async (req, res) => {
 
 const setDocente = async (req, res) => {
     const rows = await services.setDocente(req, res)
-    const success = rows.length > 0
-    const data = success ? rows[0] : null
-    const message = success ? "Docente registrado" : "No se pudo registrar al docente"
+    const success = rows.id || rows.update ? true : false
+    const data = rows.id ? rows : null
+    const message =  rows.id ? "Docente registrado" : rows.update ? "Docente actualizado" : rows.error ? rows.error : "No se pudo registrar al docente"
     res.send( { success, data, message } )
 }
 
@@ -80,8 +80,18 @@ const setDocentes = async (req, res) => {
     res.send( { success, data, message } )
 }
 
+const setDirector = async (req, res) => {
+    const rows = await services.setDirector(req, res)
+
+    const success = rows.id || rows.update ? true : false
+    const data = rows.id ? rows : null
+    const message = success ? "Director registrado" : "No se pudo registrar al Director"
+    res.send( { success, data, message } )
+}
+
 export const controller = {
     getColegios, getColegio, setColegio,
     getSedes, getSede, setSede,
     getDocentes, getDocente, setDocente, setDocentes,
+    setDirector,
 }

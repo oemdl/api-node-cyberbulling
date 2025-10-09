@@ -13,3 +13,10 @@
     .post("/docentes" )         guardar docentes 
     .post("/docente" )          guardar docente
 
+    .post("/director")          asignar Director a Sede
+
+/api/v1/director
+
+    .post("/tutor/convivencia") asignar TutorConvivencia a Sede
+    .post("/psicologo")         asignar Psicologo a Sede
+    .post("/sede/grupo")        crear Grupo en Sede 
