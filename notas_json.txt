@@ -113,52 +113,58 @@
 
 // Alumnos
 
-[
-  {
-    "id" : 0,
-    "idGrupo" : 1,
-    "idApoderado" : 0,
-    "tipo" : "P",
-    "nombres" : "Alumno 11",
-    "apellidoPaterno" : "Apellido Paterno Alumno 11",
-    "apellidoMaterno" : "Apellido Materno Alumno 11",
-    "dni" : "22334411",
-    "fechaNacimiento" : "2020/01/01",
-    "correo" : "correo alumno 1",
-    "telefono" : "995544011",
-    "tikTok" : "@titktok 11",
-    "facebook" : "@facebook 11",
-    "whatsApp" : "@whatsApp 11",
-    "imagen" : "",
-    "nombresApoderado" : "Apoderado 11",
-    "apellidPaternoApoderado" : "Apellido Paterno Apoderado 11",
-    "apellidoMaternoApoderado" : "Apellido Materno Apoderado 11",
-    "dniApoderado" : "88554411",
-    "correoApoderado" : "correo Apoderado 11",
-    "telefonoApoderado" : "997766001"
-  },
-  {
-    "id" : 0,
-    "idGrupo" : 1,
-    "idApoderado" : 0,
-    "tipo" : "P",
-    "nombres" : "Alumno 12",
-    "apellidoPaterno" : "Apellido Paterno Alumno 12",
-    "apellidoMaterno" : "Apellido Materno Alumno 12",
-    "dni" : "22334412",
-    "fechaNacimiento" : "2020/01/02",
-    "correo" : "correo alumno 2",
-    "telefono" : "995544012",
-    "tikTok" : "@titktok 12",
-    "facebook" : "@facebook 12",
-    "whatsApp" : "@whatsApp 12",
-    "imagen" : "",
-    "nombresApoderado" : "Apoderado 11",
-    "apellidPaternoApoderado" : "Apellido Paterno Apoderado 11",
-    "apellidoMaternoApoderado" : "Apellido Materno Apoderado 11",
-    "dniApoderado" : "88554411",
-    "correoApoderado" : "correo Apoderado 11",
-    "telefonoApoderado" : "997766001"
-  }    
-]
-
+{
+  "idGrupo" : 1,
+  "alumnos" : [
+      {
+        "id" : 0,
+        "idGrupo" : 0,
+        "idApoderado" : 0,
+        "tipo" : "P",
+        "nombres" : "Alumno 11",
+        "apellidoPaterno" : "Apellido Paterno Alumno 11",
+        "apellidoMaterno" : "Apellido Materno Alumno 11",
+        "dni" : "22334411",
+        "fechaNacimiento" : "2020/01/01",
+        "correo" : "correo alumno 1",
+        "telefono" : "995544011",
+        "tikTok" : "@titktok 11",
+        "facebook" : "@facebook 11",
+        "whatsApp" : "@whatsApp 11",
+        "imagen" : "",
+        "apoderado" : {
+            "nombres" : "Apoderado 11",
+            "apellidPaterno" : "Apellido Paterno Apoderado 11",
+            "apellidoMaterno" : "Apellido Materno Apoderado 11",
+            "dni" : "88554411",
+            "correo" : "correo Apoderado 11",
+            "telefono" : "997766001"
+        }
+      },
+      {
+        "id" : 0,
+        "idGrupo" : 0,
+        "idApoderado" : 0,
+        "tipo" : "P",
+        "nombres" : "Alumno 12",
+        "apellidoPaterno" : "Apellido Paterno Alumno 12",
+        "apellidoMaterno" : "Apellido Materno Alumno 12",
+        "dni" : "22334412",
+        "fechaNacimiento" : "2020/01/02",
+        "correo" : "correo alumno 2",
+        "telefono" : "995544012",
+        "tikTok" : "@titktok 12",
+        "facebook" : "@facebook 12",
+        "whatsApp" : "@whatsApp 12",
+        "imagen" : "",
+        "apoderado" : {
+            "nombres" : "Apoderado 12",
+            "apellidPaterno" : "Apellido Paterno Apoderado 12",
+            "apellidoMaterno" : "Apellido Materno Apoderado 12",
+            "dni" : "88554412",
+            "correo" : "correo Apoderado 12",
+            "telefono" : "997766002"
+        }
+      }
+    ]
+}

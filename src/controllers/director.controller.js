@@ -58,7 +58,7 @@ const setAlumno = async (req, res) => {
 
 const setAlumnos = async (req, res) => {
     const rows = await services.setAlumnos(req, res)
-    const success = rows.length > 0
+    const success = true // rows.length > 0
     const data = success ? rows : null
     const message = success ? "Alumnos registrados" : "No se pudo registrar a los alumnos"
     res.send( { success, data, message } )

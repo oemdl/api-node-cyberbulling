@@ -57,15 +57,24 @@ const setAlumno = async (req, res) => {
 }
 
 const setAlumnos = async (req, res) => {
-
-
+    const { idGrupo, alumnos } = req.body
+    
     let registros = []
-    const { idSede, docentes } = req.body
-    for ( const docente of docentes ) {
-        const [ rows ] = await pool.query('call sp_setAlumno(?,?,?,?,?,?,?,?,?,?,?,?,?)', [ 0, idSede, ...Object.values(docente) ])
-        if ( rows[0][0].insertID ) registros.push( { "id" : rows[0][0].insertID, idSede, ...docente } )
-        if ( rows[0][0].error )    registros.push( { "error" : rows[0][0].error } )
-    };
+    for ( let alumno of alumnos ) {
+        let { apoderado, ...alumno_data  } = alumno
+
+        const [ rows_apoderado ] = await pool.query('call sp_setApoderado(?,?,?,?,?,?,?)', [ 0, ...Object.values( apoderado ) ])
+        
+        alumno_data.idGrupo = idGrupo
+        alumno_data.idApoderado = rows_apoderado[0][0].insertID
+
+        const [ rows_alumno ] = await pool.query('call sp_setAlumno(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [ ...Object.values( alumno_data ) ])
+        if ( rows_alumno[0][0].insertID )  {
+            alumno_data.id = rows_alumno[0][0].insertID
+            registros.push( { alumno_data } )
+        }
+        if ( rows_alumno[0][0].error )  registros.push( { "error" : rows_alumno[0][0].error } )
+    }
 
     if ( registros.every(obj => obj.error) ) registros = [];
     return( registros )

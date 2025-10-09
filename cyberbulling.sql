@@ -114,6 +114,9 @@ create procedure sp_getGrupoBySede(in _idSede int)
 
 create procedure sp_getApoderado(in _id int)
 	select * from Apoderado where id = _id;
+
+create procedure sp_getApoderadoByDni(in _dni char(8))
+	select * from Apoderado where Dni = _dni;
     
 -- Alumno
 
@@ -246,7 +249,7 @@ create procedure sp_setApoderado(in _id int, in _nombres char(30), in _apellidoP
             declare _count int;
 			select count(*) into _count from Apoderado where Dni = _dni;
 			if ( _count = 0 ) then
-				insert Apoderado values ( null, _nombres, _apellidPaterno, _apellidoMaterno, _dni, _correo, _telefono );
+				insert Apoderado values ( null, _nombres, _apellidoPaterno, _apellidoMaterno, _dni, _correo, _telefono );
                 select last_insert_id() as insertID;
 			  else select "Apoderado ya está registrado" as 'error';
 			end if;
@@ -347,4 +350,4 @@ create procedure sp_setGrupoByTutor(in _idGrupo int, in _idDocente int)
 -- call sp_getAlumno(1)
 -- call sp_getAlumnoByDni('11223311')
 
--- select * from Alumno
+-- select * from Apoderado
