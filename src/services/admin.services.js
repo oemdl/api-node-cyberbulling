@@ -90,6 +90,7 @@ const setDirector = async (req, res) => {
     return ( { "update" : true } )
 }
 
+
 export const services = {
     getColegios, getColegio, setColegio,
     getSedes, getSede, setSede,

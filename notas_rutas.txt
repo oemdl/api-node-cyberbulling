@@ -10,7 +10,7 @@
 
     .get("/docentes/:id" )      docentes x sedeID
     .get("/docente/:id" )       docente x ID
-    .post("/docentes" )         guardar docentes 
+    .post("/docentes" )         guardar docentes CSV
     .post("/docente" )          guardar docente
 
     .post("/director")          asignar Director a Sede
@@ -19,4 +19,10 @@
 
     .post("/tutor/convivencia") asignar TutorConvivencia a Sede
     .post("/psicologo")         asignar Psicologo a Sede
-    .post("/sede/grupo")        crear Grupo en Sede 
+    .post("/sede/grupo")        crear Grupo en Sede
+
+    .get("/alumnos/:id" )       alumnos x Grupo
+    .get("/alumno/:id" )        alumno x ID
+    .get("/alumno/dni/:id" )    alumno x Dni
+    .post("/alumno" )           guardar alumno
+    .post("/alumnos" )          guardar alumnos CSV

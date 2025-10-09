@@ -91,3 +91,22 @@
   "seccion" :"A",
   "turno" : "M"
 }
+
+// Alumno
+{
+  "id" : 0,
+  "idGrupo" : 1,
+  "idApoderado" : 0,
+  "tipo" : "P",
+  "nombres" : "Alumno 1",
+  "apellidoPaterno" : "Apellido Paterno Alumno 1",
+  "apellidoMaterno" : "Apellido Materno Alumno 1",
+  "dni" : "22334401",
+  "fechaNacimiento" : "01/01/2020",
+  "correo" : "correo alumno 1",
+  "telefono" : "995544001",
+  "tikTok" : "@titktok 1",
+  "facebook" : "@facebook 1",
+  "whatsApp" : "@whatsApp 1",
+  "imagen" : ""
+}

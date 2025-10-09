@@ -115,6 +115,16 @@ create procedure sp_getGrupoBySede(in _idSede int)
 create procedure sp_getApoderado(in _id int)
 	select * from Apoderado where id = _id;
     
+-- Alumno
+
+create procedure sp_getAlumno(in _id int)
+	select * from Alumno where id = _id;
+ 
+create procedure sp_getAlumnoByDni(in _dni char(8))
+	select * from Alumno where Dni = _dni;
+
+create procedure sp_getAlumnos(in _idGrupo int)
+	select * from Alumno where idGrupo = _idGrupo;
 
 -- Guardar
 
@@ -254,7 +264,7 @@ create procedure sp_setApoderado(in _id int, in _nombres char(30), in _apellidoP
 delimiter //
 create procedure sp_setAlumno(in _id int, in _idGrupo int, in _idApoderado int, in _tipo char(1), in _nombres char(30), in _apellidoPaterno char(30), in _apellidoMaterno char(30),
 								 in _dni char(8), in _fechaNacimiento date, in _correo char(100), in _telefono char(20),
-                                 in _tikTok char(30), in _facebook char(30), in whatsApp char(30), in _imagen char(50) )
+                                 in _tikTok char(30), in _facebook char(30), in _whatsApp char(30), in _imagen char(50) )
 	if ( _id = 0 ) then
 		begin
 			declare _count int;
@@ -265,7 +275,7 @@ create procedure sp_setAlumno(in _id int, in _idGrupo int, in _idApoderado int, 
             
             select count(*) into _count from Alumno where Dni = _dni;
 			if ( _count = 0 ) then
-				insert Alumno values ( null, _idGrupo, _idApoderado, _tipo, _nombres, _apellidPaterno, _apellidoMaterno, _dni, _fechaNacimiento, _correo, _telefono, _tikTok, _facebook, _whatsApp, _imagen );
+				insert Alumno values ( null, _idGrupo, _idApoderado, _tipo, _nombres, _apellidoPaterno, _apellidoMaterno, _dni, _fechaNacimiento, _correo, _telefono, _tikTok, _facebook, _whatsApp, _imagen );
                 select last_insert_id() as insertID;
 			  else select "Alumno ya está registrado" as 'error';
 			end if;
@@ -297,7 +307,7 @@ create procedure sp_setSedeByDirector(in _idSede int, in _idDocente int)
 delimiter //
 create procedure sp_setSedeByTutorConvivencia(in _idSede int, in _idDocente int)
 	begin
-		update Sede set idTutorConvicencia = _idDocente where id = _idSede;
+		update Sede set idTutorConvivencia = _idDocente where id = _idSede;
         if ( row_count() = 0 ) then
 			select "Tutor de Convivencia no se registro" as 'error';
         end if;
@@ -333,5 +343,8 @@ create procedure sp_setGrupoByTutor(in _idGrupo int, in _idDocente int)
 -- call sp_getDocentes(2)
 -- call sp_getDocente(12)
 -- call sp_getDocenteByDni('11223311')
+-- call sp_getAlumnos(1)
+-- call sp_getAlumno(1)
+-- call sp_getAlumnoByDni('11223311')
 
--- select * from Sede
+-- select * from Alumno
