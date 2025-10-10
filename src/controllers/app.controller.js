@@ -16,8 +16,8 @@ const getDocente = async (req, res) => {
     res.send( { success, data, message } )
 }
 
-const getGruposBySede = async (req, res) => {
-    const rows = await services.getGruposBySede(req, res)
+const getGrupos = async (req, res) => {
+    const rows = await services.getGrupos(req, res)
     const success = rows[0].length > 0
     const data = success ? rows[0] : null
     const message = success ? "Grupos registrados" : "No hay grupos registrados"
@@ -50,7 +50,7 @@ const getAlumnoByDni = async (req, res) => {
 
 export const controller = {
     getDocente, getDocentes,
-    getGruposBySede,
+    getGrupos,
     getAlumno, getAlumnos, getAlumnoByDni,
     
 }

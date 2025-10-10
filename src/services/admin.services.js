@@ -24,8 +24,8 @@ const setColegio = async (req, res) => {
 }
 
 const getSedes = async (req, res) => {
-    const id = req.params.id
-    const rows = await pool.query('call sp_getSedes(?)', [id])
+    const idColegio = req.params.idColegio
+    const rows = await pool.query('call sp_getSedes(?)', [idColegio])
     return ( rows[0] )
 }
 

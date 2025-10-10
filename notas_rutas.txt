@@ -4,7 +4,7 @@
     .get("/colegio/:id" )       colegio x ID
     .post("/colegio" )          guardar colegio
 
-    .get("/sedes/:id" )         lista de sedes x ID de colegio
+    .get("/sedes/:idColegio" )  sedes x ID de colegio
     .get("/sede/:id" )          sede x ID
     .post("/sede" )             guardar sede
 
@@ -17,18 +17,21 @@
     .post("/tutor/convivencia") asignar TutorConvivencia a Sede
     .post("/psicologo")         asignar Psicologo a Sede
 
-    .post("/sede/grupo")        crear Grupo en Sede
+    .post("grupo")              crear Grupo en Sede
 
     .post("/alumno" )           guardar alumno
     .post("/alumnos" )          guardar alumnos CSV
 
 
 /api/v1/app
-    .get("/docentes/:id" )      docentes x sedeID
+    .get("/docentes/:idSede" )  docentes x sedeID
     .get("/docente/:id" )       docente x ID
 
-    .get("/sede/grupos/:id")    Grupos x Sede
+    .get("/grupos/:idSede")     Grupos x Sede
 
-    .get("/alumnos/:id" )       alumnos x Grupo
+    .get("/alumnos/:idGrupo" )  alumnos x Grupo
     .get("/alumno/:id" )        alumno x ID
-    .get("/alumno/dni/:id" )    alumno x Dni
+    .get("/alumno/dni/:dni" )   alumno x Dni
+
+    .get("/incidencias/:idSede" )   incidencias x Sede
+    .post("/incidencia" )           guardar incidencias

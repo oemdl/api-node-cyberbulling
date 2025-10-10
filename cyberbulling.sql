@@ -114,8 +114,8 @@ create procedure sp_getColegio(in _id int)
 create procedure sp_getSede(in _id int)
 	select * from Sede where id = _id;
     
-create procedure sp_getSedes(in _id int)
-	select * from Sede where idColegio = _id;
+create procedure sp_getSedes(in _idColegio int)
+	select * from Sede where idColegio = _idColegio;
     
 -- Docente
 
@@ -158,7 +158,7 @@ create procedure sp_getAlumnos(in _idGrupo int)
 -- Incidencia
 
 create procedure sp_getIncidencias(in _idSede int)
-	select * from Incidencia where id = _idSede;
+	select * from Incidencia where idSede = _idSede;
     
 
 -- Guardar
@@ -242,7 +242,7 @@ create procedure sp_setDocente(in _id int, in _idSede int, in _nombres char(20),
 //
 
 delimiter //
-create procedure sp_setGrupoBySede(in _id int, in _idSede int, in _idTutor int, in _nivel char(1), in _grado char(1), in _seccion char(1), in _turno char(1) )
+create procedure sp_setGrupo(in _id int, in _idSede int, in _idTutor int, in _nivel char(1), in _grado char(1), in _seccion char(1), in _turno char(1) )
 	if ( _id = 0 ) then
 		begin
 			declare _count int;
@@ -330,6 +330,24 @@ create procedure sp_setAlumno(in _id int, in _idGrupo int, in _idApoderado int, 
 //
 
 delimiter //
+create procedure sp_setIncidencia(in _id int, in _idSede int, in _idDocente int, in _idAlumnoVictima int, in _idAlumnoAgresor int,
+					in _fechaCreacion date, in _fechaLimite date, in _tipoRedesSociales int, in _otroMedio char(50), in _tipoCaso int,
+                    in _estado int, in _nivelRiesgo int, in _descripcion text, in _notasAdicionales text )
+	if ( _id = 0 ) then
+		insert Incidencia values ( null, _idSede, _idDocente, _idAlumnoVictima, _idAlumnoAgresor, _fechaCreacion, _fechaLimite, _tipoRedesSociales, _otroMedio, _tipoCaso, _estado, _niveRiesgo, _descripcion, _notasAdicionales );
+		select last_insert_id() as insertID;
+	  else
+		update Docente set idSede = _idSede, idDocente = _idDocente, idAlumnoVictima = _idAlumnoVictima, idAlumnoAgresor = _idAlumnoAgresor,
+						   FechaCreacion = _fechaCreacion, FechaLimite = _fechaLimite, TipoRedesSociales = _tipoRedesSociales, OtroMedio = _otroMedio,
+                           TipoCaso = _tipoCaso, Estado = _estado, NivelRiesgo = _nivelRiesgo, Descripcion = _descripcion, NotasAdicionales = _notasAdicionales
+					   where id = _id;
+		if ( row_count() = 0 ) then
+			select "Incidencia no esta registrada" as 'error';
+		end if;
+    end if;
+//
+
+delimiter //
 create procedure sp_setSedeByDirector(in _idSede int, in _idDocente int)
 	begin
 		update Sede set idDirector = _idDocente where id = _idSede;
@@ -371,7 +389,7 @@ create procedure sp_setGrupoByTutor(in _idGrupo int, in _idDocente int)
 
 -- consultas 
 
-create procedure sp_getGruposBySede(in _idSede int)
+create procedure sp_getGrupos(in _idSede int)
 	select g.*, coalesce( concat( trim(d.Nombres), ' ', trim(d.ApellidoPaterno) ), 'Tutor no asignado' ) as 'Tutor',
 			case
 				when g.Nivel = 'I' then 'Inicial'
@@ -384,7 +402,48 @@ create procedure sp_getGruposBySede(in _idSede int)
 			end as 'Turno Detalle'
 		from Grupo g, Docente d where g.id = _idSede;
 
-
+create procedure sp_getIndicencias(in _idSede int)
+	select *, 
+			case
+				when idDocente = 0 then 'Docente no asignado'
+				when idDocente > 0 then ( select concat( trim(Nombres), ' ', trim(ApellidoPaterno), ' ', trim(ApellidoMaterno) ) from Docente where id = idDocente ) 
+			end as 'Docente',
+			case
+				when idAlumnoVictima = 0 then 'Víctima no registrado'
+				when idAlumnoVictima > 0 then ( select concat( trim(Nombres), ' ', trim(ApellidoPaterno), ' ', trim(ApellidoMaterno) ) from Alumno where id = idAlumnoVictima )
+			end as 'Víctima',
+			case
+				when idAlumnoAgresor = 0 then 'Agresor no registrado'
+				when idAlumnoAgresor > 0 then ( select concat( trim(Nombres), ' ', trim(ApellidoPaterno), ' ', trim(ApellidoMaterno) ) from Alumno where id = idAlumnoAgresor )
+			end as 'Agresor',            
+            case
+				when TipoRedesSociales = 1 then 'Facebook'
+                when TipoRedesSociales = 2 then 'Intagram'
+                when TipoRedesSociales = 3 then 'TikTok'
+                when TipoRedesSociales = 4 then 'WhatsApp'
+                when TipoRedesSociales = 5 then 'Otro'
+			end as 'Rees Sociales',
+			case
+				when TipoCaso = 1 then 'Nuevo'
+                when TipoCaso = 2 then 'Reingreso'
+                when TipoCaso = 3 then 'Reincidente'
+			end as 'Tipo Caso',
+            case
+				when Estado = 1 then 'Asignado'
+                when Estado = 2 then 'En Proceso'
+                when Estado = 3 then 'Resuelto'
+                when Estado = 4 then 'Derivado'
+                when Estado = 5 then 'Pendiente'
+			end as 'Estado',
+            case
+				when NivelRiesgo = 1 then 'Leve'
+                when NivelRiesgo = 2 then 'Grave'
+                when NivelRiesgo = 3 then 'Muy Grave'
+                when NivelRiesgo = 4 then 'Severo'
+			end as 'Nivel Riesgo'
+		from Incidencia
+        where idSede = _idSede;
+        
 
 -- use cyberbulling
 -- call sp_getColegios()
@@ -399,5 +458,6 @@ create procedure sp_getGruposBySede(in _idSede int)
 -- call sp_getAlumnos(1)
 -- call sp_getAlumno(1)
 -- call sp_getAlumnoByDni('11223311')
+-- call sp_getIndicenciasBySede(1)
 
--- select * from Alumno
+-- select * from Sede

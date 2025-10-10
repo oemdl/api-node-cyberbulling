@@ -8,7 +8,7 @@ router
     .get("/colegio/:id", controller.getColegio )
     .post("/colegio", controller.setColegio )
 
-    .get("/sedes/:id", controller.getSedes )
+    .get("/sedes/:idColegio", controller.getSedes )
     .get("/sede/:id", controller.getSede )
     .post("/sede", controller.setSede )
 

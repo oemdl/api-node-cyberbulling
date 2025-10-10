@@ -1,8 +1,8 @@
 import { pool } from '../db/db.js'
 
 const getDocentes = async (req, res) => {
-    const id = req.params.id
-    const rows = await pool.query('call sp_getDocentes(?)', [id])
+    const idSede = req.params.idSede
+    const rows = await pool.query('call sp_getDocentes(?)', [idSede])
     return ( rows[0] )
 }
 
@@ -12,15 +12,15 @@ const getDocente = async (req, res) => {
     return ( rows[0] )
 }
 
-const getGruposBySede = async (req, res) => {
-    const id = req.params.id
-    const rows = await pool.query('call sp_getGruposBySede(?)', [id])
+const getGrupos = async (req, res) => {
+    const idSede = req.params.idSede
+    const rows = await pool.query('call sp_getGrupos(?)', [id])
     return ( rows[0] )
 }
 
 const getAlumnos = async (req, res) => {
-    const id = req.params.id
-    const rows = await pool.query('call sp_getAlumnos(?)', [id])
+    const idGrupo = req.params.idGrupo
+    const rows = await pool.query('call sp_getAlumnos(?)', [idGrupo])
     return ( rows[0] )
 }
 
@@ -38,7 +38,7 @@ const getAlumnoByDni = async (req, res) => {
 
 export const services = {
     getDocente, getDocentes,
-    getGruposBySede,
+    getGrupos,
     getAlumnos, getAlumno, getAlumnoByDni,
 
 }

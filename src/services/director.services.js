@@ -14,9 +14,9 @@ const setSedeByPsicologo = async (req, res) => {
     return ( { "update" : true } )
 }
 
-const setGrupoBySede = async (req, res) => {
+const setGrupo = async (req, res) => {
     const id = req.body.id
-    const [ rows ] = await pool.query('call sp_setGrupoBySede(?,?,?,?,?,?,?)', [ ...Object.values( req.body ) ])
+    const [ rows ] = await pool.query('call sp_setGrupo(?,?,?,?,?,?,?)', [ ...Object.values( req.body ) ])
 
     if ( id == 0 && rows[0][0].insertID ) {
         req.body.id = rows[0][0].insertID
@@ -65,7 +65,7 @@ const setAlumnos = async (req, res) => {
 
 export const services = { 
     setSedeByTutorConvivencia, setSedeByPsicologo,
-    setGrupoBySede,
+    setGrupo,
     setAlumno, setAlumnos,
 
 }

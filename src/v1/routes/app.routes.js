@@ -4,12 +4,12 @@ import { controller } from "../../controllers/app.controller.js"
 const router = Router()
 
 router
-    .get("/docentes/:id", controller.getDocentes )
+    .get("/docentes/:idSede", controller.getDocentes )
     .get("/docente/:id", controller.getDocente )
 
-    .get("/sede/grupos/:id", controller.getGruposBySede )
+    .get("/grupos/:idSede", controller.getGrupos )
 
-    .get("/alumnos/:id", controller.getAlumnos )
+    .get("/alumnos/:idGrupo", controller.getAlumnos )
     .get("/alumno/:id", controller.getAlumno )
     .get("/alumno/dni/:dni", controller.getAlumnoByDni )
 

@@ -66,7 +66,6 @@ const setDocentes = async (req, res) => {
 
 const setDirector = async (req, res) => {
     const rows = await services.setDirector(req, res)
-
     const success = rows.id || rows.update ? true : false
     const data = rows.id ? rows : null
     const message = success ? "Director registrado" : "No se pudo registrar al Director"
