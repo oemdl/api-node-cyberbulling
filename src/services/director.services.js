@@ -14,9 +14,15 @@ const setSedeByPsicologo = async (req, res) => {
     return ( { "update" : true } )
 }
 
-const setSedeGrupo = async (req, res) => {
+const getGruposBySede = async (req, res) => {
+    const id = req.params.id
+    const rows = await pool.query('call sp_getGruposBySede(?)', [id])
+    return ( rows[0] )
+}
+
+const setGrupoBySede = async (req, res) => {
     const id = req.body.id
-    const [ rows ] = await pool.query('call sp_setSedeGrupo(?,?,?,?,?,?,?)', [ ...Object.values( req.body ) ])
+    const [ rows ] = await pool.query('call sp_setGrupoBySede(?,?,?,?,?,?,?)', [ ...Object.values( req.body ) ])
 
     if ( id == 0 && rows[0][0].insertID ) {
         req.body.id = rows[0][0].insertID
@@ -82,7 +88,8 @@ const setAlumnos = async (req, res) => {
 
 
 export const services = { 
-    setSedeByTutorConvivencia, setSedeByPsicologo, setSedeGrupo, 
+    setSedeByTutorConvivencia, setSedeByPsicologo,
+    getGruposBySede, setGrupoBySede,
     getAlumnos, getAlumno, getAlumnoByDni, setAlumno, setAlumnos,
 
 }

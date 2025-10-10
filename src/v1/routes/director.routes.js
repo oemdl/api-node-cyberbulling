@@ -6,7 +6,9 @@ const router = Router()
 router
     .post("/sede/tutor/convivencia", controller.setSedeByTutorConvivencia )
     .post("/sede/psicologo", controller.setSedeByPsicologo )
-    .post("/sede/grupo", controller.setSedeGrupo )
+
+    .get("/sede/grupos/:id", controller.getGruposBySede )
+    .post("/sede/grupo", controller.setGrupoBySede )
 
     .get("/alumnos/:id", controller.getAlumnos )
     .get("/alumno/:id", controller.getAlumno )

@@ -16,8 +16,16 @@ const setSedeByPsicologo = async (req, res) => {
     res.send( { success, data, message } )
 }
 
-const setSedeGrupo = async (req, res) => {
-    const rows = await services.setSedeGrupo(req, res)
+const getGruposBySede = async (req, res) => {
+    const rows = await services.getGruposBySede(req, res)
+    const success = rows[0].length > 0
+    const data = success ? rows[0] : null
+    const message = success ? "Grupos registrados" : "No hay grupos registrados"
+    res.send( { success, data, message } )
+}
+
+const setGrupoBySede = async (req, res) => {
+    const rows = await services.setGrupoBySede(req, res)
     const success = rows.id || rows.update ? true : false
     const data = rows.id ? rows : null
     const message = success ? "Grupo registrado" : "No se pudo registrar al grupo"
@@ -66,7 +74,8 @@ const setAlumnos = async (req, res) => {
 
 
 export const controller = {
-    setSedeByTutorConvivencia, setSedeByPsicologo, setSedeGrupo, 
+    setSedeByTutorConvivencia, setSedeByPsicologo,
+    getGruposBySede, setGrupoBySede,
     getAlumno, getAlumnos, getAlumnoByDni, setAlumno, setAlumnos,
     
 }

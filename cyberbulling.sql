@@ -72,6 +72,34 @@ create table Alumno(
     WhatsApp char(30),
     Imagen char(50) );
 
+create table Incidencia(
+	id int primary key auto_increment,
+    idDocente int references Docente(id),
+    idAlumnoVictima int references Alumno(id),
+    idAlumnoAgresor int references Alumno(id),
+    FechaCreacion date default current_timestamp,
+    FechaLimite date not null,
+    TipoRedesSociales int,				-- 1 Facebook, 2 Instagram, 3 TikTok, 4 WhatsApp, 5 Otro
+    OtroMedio char(50),
+    TipoCaso int,						-- 1 Nuevo, 2 Reingreso, 3 Reincidente
+    Estado int,							-- 1 Asignado, 2 En Proceso, 3 Resuelto, 4 Derivado, 5 Pendiente
+    NivelRiesgo int,					-- 1 Leve, 2 Grave, 3 Muy Grave, 4 Grave
+    Descripcion text,
+    NotasAdicionales text );
+
+create table IncidenciaSeguimiento(
+	id int primary key auto_increment,
+    idIncidencia int references Incidencia(id),
+    idDocente int references Docente(id),
+    Derivar int,						-- 1 Departamento Psicología, 2 Docente, 3 Tutoría, 4 Coordinación Académica, 5 Cómite Convivencia, 6 Disciplina
+    Escalamiento int, 					-- 1 No, 2 Subdirección, 3 Dirección, 4 UGEL, 5 MINEDU, 6 SISEVE, 7 Otros
+    Acciones char(10),					-- 1 check, 0 uncheck
+    FechaRegistro date not null,
+    Titulo char(50) not null,
+    Tipo int, 							-- 1 Reporte, 2 Investigación, 3 Reunión, 4 Cierre
+    Detalles text );
+
+
 -- Colegio
 
 create procedure sp_getColegios()
@@ -107,7 +135,7 @@ create procedure sp_setDocenteByCargo(in _id int, in _cargo char(1) )
 create procedure sp_getGrupo(in _id int)
 	select * from Grupo where id = _id;
 
-create procedure sp_getGrupoBySede(in _idSede int)
+create procedure sp_getGruposBySede(in _idSede int)
 	select * from Grupo where id = _idSede;
 
 -- Apoderado
@@ -210,7 +238,7 @@ create procedure sp_setDocente(in _id int, in _idSede int, in _nombres char(20),
 //
 
 delimiter //
-create procedure sp_setSedeGrupo(in _id int, in _idSede int, in _idTutor int, in _nivel char(1), in _grado char(1), in _seccion char(1), in _turno char(1) )
+create procedure sp_setGrupoBySede(in _id int, in _idSede int, in _idTutor int, in _nivel char(1), in _grado char(1), in _seccion char(1), in _turno char(1) )
 	if ( _id = 0 ) then
 		begin
 			declare _count int;
@@ -346,8 +374,9 @@ create procedure sp_setGrupoByTutor(in _idGrupo int, in _idDocente int)
 -- call sp_getDocentes(2)
 -- call sp_getDocente(12)
 -- call sp_getDocenteByDni('11223311')
+-- call sp_getGruposBySede(1)
 -- call sp_getAlumnos(1)
 -- call sp_getAlumno(1)
 -- call sp_getAlumnoByDni('11223311')
 
--- select * from Apoderado
+-- select * from Alumno

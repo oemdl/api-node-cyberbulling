@@ -19,6 +19,8 @@
 
     .post("/tutor/convivencia") asignar TutorConvivencia a Sede
     .post("/psicologo")         asignar Psicologo a Sede
+
+    .get("/sede/grupos/:id")    Grupos x Sede
     .post("/sede/grupo")        crear Grupo en Sede
 
     .get("/alumnos/:id" )       alumnos x Grupo
