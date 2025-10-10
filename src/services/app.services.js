@@ -14,7 +14,7 @@ const getDocente = async (req, res) => {
 
 const getGrupos = async (req, res) => {
     const idSede = req.params.idSede
-    const rows = await pool.query('call sp_getGrupos(?)', [id])
+    const rows = await pool.query('call sp_getGrupos(?)', [idSede])
     return ( rows[0] )
 }
 
