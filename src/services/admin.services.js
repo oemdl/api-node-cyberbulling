@@ -47,18 +47,6 @@ const setSede = async (req, res) => {
     return ( { "update" : true } )
 }
 
-const getDocentes = async (req, res) => {
-    const id = req.params.id
-    const rows = await pool.query('call sp_getDocentes(?)', [id])
-    return ( rows[0] )
-}
-
-const getDocente = async (req, res) => {
-    const id = req.params.id
-    const rows = await pool.query('call sp_getDocente(?)', [id])
-    return ( rows[0] )
-}
-
 const setDocente = async (req, res) => {
     const id = req.body.id
     const [ rows ] = await pool.query('call sp_setDocente(?,?,?,?,?,?,?,?,?,?,?,?,?)', [ ...Object.values( req.body ) ])
@@ -94,7 +82,7 @@ const setDirector = async (req, res) => {
 export const services = {
     getColegios, getColegio, setColegio,
     getSedes, getSede, setSede,
-    getDocentes, getDocente, setDocente, setDocentes,
+    setDocente, setDocentes,
     setDirector,
 
 }

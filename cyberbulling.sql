@@ -74,6 +74,7 @@ create table Alumno(
 
 create table Incidencia(
 	id int primary key auto_increment,
+    idSede int references Sede(id),
     idDocente int references Docente(id),
     idAlumnoVictima int references Alumno(id),
     idAlumnoAgresor int references Alumno(id),
@@ -135,9 +136,6 @@ create procedure sp_setDocenteByCargo(in _id int, in _cargo char(1) )
 create procedure sp_getGrupo(in _id int)
 	select * from Grupo where id = _id;
 
-create procedure sp_getGruposBySede(in _idSede int)
-	select * from Grupo where id = _idSede;
-
 -- Apoderado
 
 create procedure sp_getApoderado(in _id int)
@@ -156,6 +154,12 @@ create procedure sp_getAlumnoByDni(in _dni char(8))
 
 create procedure sp_getAlumnos(in _idGrupo int)
 	select * from Alumno where idGrupo = _idGrupo;
+
+-- Incidencia
+
+create procedure sp_getIncidencias(in _idSede int)
+	select * from Incidencia where id = _idSede;
+    
 
 -- Guardar
 
@@ -364,6 +368,23 @@ create procedure sp_setGrupoByTutor(in _idGrupo int, in _idDocente int)
         end if;
 	end;
 //
+
+-- consultas 
+
+create procedure sp_getGruposBySede(in _idSede int)
+	select g.*, coalesce( concat( trim(d.Nombres), ' ', trim(d.ApellidoPaterno) ), 'Tutor no asignado' ) as 'Tutor',
+			case
+				when g.Nivel = 'I' then 'Inicial'
+				when g.Nivel = 'P' then 'Primaria'
+				when g.Nivel = 'S' then 'Secundaria'
+			end as 'Nivel Detalle',
+			case
+				when g.Turno = 'M' then 'Mañana'
+				when g.Turno = 'T' then 'Tarde'
+			end as 'Turno Detalle'
+		from Grupo g, Docente d where g.id = _idSede;
+
+
 
 -- use cyberbulling
 -- call sp_getColegios()
