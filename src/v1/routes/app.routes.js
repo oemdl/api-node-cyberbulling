@@ -13,4 +13,8 @@ router
     .get("/alumno/:id", controller.getAlumno )
     .get("/alumno/dni/:dni", controller.getAlumnoByDni )
 
+    .get("/incidencias/:id", controller.getIncidencias )
+    .post("/incidencia", controller.setIncidencia )
+
+
 export default router

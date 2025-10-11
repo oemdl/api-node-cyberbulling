@@ -334,7 +334,7 @@ create procedure sp_setIncidencia(in _id int, in _idSede int, in _idDocente int,
 					in _fechaCreacion date, in _fechaLimite date, in _tipoRedesSociales int, in _otroMedio char(50), in _tipoCaso int,
                     in _estado int, in _nivelRiesgo int, in _descripcion text, in _notasAdicionales text )
 	if ( _id = 0 ) then
-		insert Incidencia values ( null, _idSede, _idDocente, _idAlumnoVictima, _idAlumnoAgresor, _fechaCreacion, _fechaLimite, _tipoRedesSociales, _otroMedio, _tipoCaso, _estado, _niveRiesgo, _descripcion, _notasAdicionales );
+		insert Incidencia values ( null, _idSede, _idDocente, _idAlumnoVictima, _idAlumnoAgresor, _fechaCreacion, _fechaLimite, _tipoRedesSociales, _otroMedio, _tipoCaso, _estado, _nivelRiesgo, _descripcion, _notasAdicionales );
 		select last_insert_id() as insertID;
 	  else
 		update Docente set idSede = _idSede, idDocente = _idDocente, idAlumnoVictima = _idAlumnoVictima, idAlumnoAgresor = _idAlumnoAgresor,
@@ -400,7 +400,9 @@ create procedure sp_getGrupos(in _idSede int)
 				when g.Turno = 'M' then 'Mañana'
 				when g.Turno = 'T' then 'Tarde'
 			end as 'Turno Detalle'
-		from Grupo g, Docente d where g.id = _idSede;
+		from Grupo g
+        left join Docente d on d.id = g.idTutor
+        where g.idSede = _idSede;
 
 create procedure sp_getIndicencias(in _idSede int)
 	select *, 
@@ -458,4 +460,4 @@ create procedure sp_getIndicencias(in _idSede int)
 -- call sp_getAlumnoByDni('11223311')
 -- call sp_getIndicenciasBySede(1)
 
--- select * from Sede
+-- select * from Grupo

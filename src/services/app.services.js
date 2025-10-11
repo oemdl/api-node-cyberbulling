@@ -36,9 +36,28 @@ const getAlumnoByDni = async (req, res) => {
     return ( rows[0] )
 }
 
+const getIncidencias = async (req, res) => {
+    const idSede = req.params.idSede
+    const rows = await pool.query('call sp_getIncidencias(?)', [idSede])
+    return ( rows[0] )
+}
+
+const setIncidencia = async (req, res) => {
+    const id = req.body.id
+    const [ rows ] = await pool.query('call sp_setIncidencia(?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [ ...Object.values( req.body ) ])
+
+    if ( id == 0 && rows[0][0].insertID ) {
+        req.body.id = rows[0][0].insertID
+        return ( req.body )
+    }
+    if ( typeof rows[0] != 'undefined' ) return ( { "error" : rows[0][0].error } )
+    return ( { "update" : true } )
+}
+
 export const services = {
     getDocente, getDocentes,
     getGrupos,
     getAlumnos, getAlumno, getAlumnoByDni,
+    getIncidencias, setIncidencia,
 
 }

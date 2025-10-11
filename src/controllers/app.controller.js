@@ -48,9 +48,27 @@ const getAlumnoByDni = async (req, res) => {
     res.send( { success, data, message } )
 }
 
+const getIncidencias = async (req, res) => {
+    const rows = await services.getIncidencias(req, res)
+    const success = rows[0].length > 0
+    const data = success ? rows[0] : null
+    const message = success ? "Incidencias registradas" : "No hay incidencias registradas"
+    res.send( { success, data, message } )
+}
+
+const setIncidencia = async (req, res) => {
+    const rows = await services.setIncidencia(req, res)
+    const success = rows.id || rows.update ? true : false
+    const data = rows.id ? rows : null
+    const message = success ? "Incidencia registrada" : "No se pudo registrar la incidencia"
+    res.send( { success, data, message } )
+}
+
+
 export const controller = {
     getDocente, getDocentes,
     getGrupos,
     getAlumno, getAlumnos, getAlumnoByDni,
+    getIncidencias, setIncidencia,
     
 }
