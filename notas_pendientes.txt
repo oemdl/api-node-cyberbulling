@@ -1,0 +1,1 @@
+actualizar lista de colegios para mostrar #alumnos - sedes - profesores

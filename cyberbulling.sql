@@ -2,25 +2,37 @@ drop database if exists cyberbulling;
 create database cyberbulling;
 use cyberbulling;
 
+create table Distrito(
+	id int primary key auto_increment,
+    Detalle char(30) unique );
+
+create table UGEL(
+	id int primary key auto_increment,
+    Detalle char(50) unique );
+
+create table UGELDistrito(
+	idUGEL int references UGEL(id),
+    idDistrito int references Distrito(id) );
+    
 create table Colegio(
 	id int primary key auto_increment,
     RazonSocial char(100) not null,
-    Imagen char(50) );
+    Imagen text );
 
 create table Sede(
 	id int primary key auto_increment,
     idColegio int references Colegio(id),
+    idDistrito int,
+    idUGEL int,
     idDirector int,
     idTutorConvivencia int,
     idPsicologo int,
-    UGEL char(20) not null,
 	Telefono char(20),
-    Imagen char(50),
-    Distrito char(30) not null,
     Direccion char(100) not null,
     Correo char(100) not null,
-    Web char(100) not null,
-    Mapa char(100) not null );
+    Web char(100),
+    Mapa text,
+    Imagen text );
 
 create table Docente(
 	id int primary key auto_increment,
@@ -35,7 +47,7 @@ create table Docente(
     Telefono char(20) not null,
     Nivel char(1) not null,
     Cargo char(1) not null,
-    Imagen char(50) );
+    Imagen text );
 
 create table Grupo(
 	id int primary key auto_increment,
@@ -67,10 +79,10 @@ create table Alumno(
     FechaNacimiento date not null,
     Correo char(100),
     Telefono char(20),
-    TikTok char(30),
-    Facebook char(30),
-    WhatsApp char(30),
-    Imagen char(50) );
+    TikTok char(50),
+    Facebook char(50),
+    WhatsApp char(50),
+    Imagen text );
 
 create table Incidencia(
 	id int primary key auto_increment,
@@ -100,6 +112,26 @@ create table IncidenciaSeguimiento(
     Tipo int, 							-- 1 Reporte, 2 Investigación, 3 Reunión, 4 Cierre
     Detalles text );
 
+
+-- Insert
+
+insert Distrito( Detalle ) values
+	('Ancón'),('Ate'),('Barranco'),('Breña'),('Carabayllo'),('Chaclacayo'),('Chorrillos'),('Cieneguilla'),('Comas'),('El Agustino'),('Independencia'),('Jesús María'),('La Molina'),('La Victoria'),
+	('Lima'),('Lince'),('Los Olivos'),('Lurigancho'),('Lurín'),('Magdalena del Mar'),('Miraflores'),('Pachacamac'),('Pucusana'),('Pueblo Libre'),('Puente Piedra'),('Punta Hermosa'),('Punta Negra'),
+	('Rímac'),('San Bartolo'),('San Borja'),('San Isidro'),('San Juan de Lurigancho'),('San Juan de Miraflores'),('San Luis'),('San Martín de Porres'),('San Miguel'),('Santa Anita'),
+	('Santa María del Mar'),('Santa Rosa'),('Santiago de Surco'),('Surquillo'),('Villa El Salvador'),('Villa María del Triunfo');
+
+insert UGEL( Detalle ) values
+	( 'UGEL 01 - San Juan de Miraflores'), ('UGEL 02 - Rímac'), ('UGEL 03 - Lince'), ('UGEL 04 - Comas'), ('UGEL 05 - San Juan de Lurigancho'), ('UGEL 06 - Ate Vitarte'), ('UGEL 07 - San Bo rja');
+
+insert UGELDistrito( idUGEL, idDistrito ) values
+	(1,19),(1,22),(1,23),(1,26),(1,27),(1,30),(1,34),(1,39),(1,43),(1,44),
+    (2,11),(2,17),(2,29),(2,36),
+    (3,4),(3,15),(3,12),(3,14),(3,16),(3,20),(3,24),(3,32),(3,37),
+    (4,1),(4,5),(4,9),(4,25),(4,40),
+    (5,33),(5,10),
+    (6,2),(6,6),(6,8),(6,13),(6,18),(6,38),
+    (7,3),(7,7),(7,21),(7,31),(7,35),(7,41),(7,42);
 
 -- Colegio
 
@@ -164,7 +196,7 @@ create procedure sp_getIncidencias(in _idSede int)
 -- Guardar
 
 delimiter //
-create procedure sp_setColegio(in _id int, in _razonSocial char(100), in _imagen char(50) )
+create procedure sp_setColegio(in _id int, in _razonSocial char(100), in _imagen text )
 	if ( _id = 0 ) then
 		begin
 			declare _count int;
@@ -186,23 +218,26 @@ create procedure sp_setColegio(in _id int, in _razonSocial char(100), in _imagen
 //
 
 delimiter //
-create procedure sp_setSede(in _id int, in _idColegio int, in _idDirector int, in _idTutorConvivencia int, in _idPsicologo int, in _ugel char(20),
-							in _telefono char(20), in _imagen char(50), in _distrito char(30), in _direccion char(100), in _correo char(100),
-                            in _web char(20), in _mapa char(100) )
+create procedure sp_setSede(in _id int, in _idColegio int, in _idDistrito int, in _idUGEL int, 
+							in _idDirector int, in _idTutorConvivencia int, in _idPsicologo int,
+							in _telefono char(20), in _direccion char(100), in _correo char(100),
+                            in _web char(20), in _mapa text, in _imagen text )
 	if ( _id = 0 ) then
 		begin
 			declare _count int;
 			select count(*) into _count from Sede where Distrito = _distrito;
 			if ( _count = 0 ) then
-				insert Sede values ( null, _idColegio, _idDirector, idTutorConvivencia, _idPsicologo, _ugel, _telefono, _imagen, _distrito, _direccion, _correo, _web, _mapa );
+				insert Sede values ( null, _idColegio, _idDistrito, _idUGEL, _idDirector, idTutorConvivencia, _idPsicologo, _telefono, _direccion, _correo, _web, _mapa, _imagen );
                 select last_insert_id() as insertID;
 			  else select "Sede ya está registrado" as 'error';
 			end if;
         end;
 	  else 
 		begin
-			update Sede set idColegio = _idColegio, idDirector = _idDirector, idTutorConvivencia = _idTutorConvivencia, idPsicologo = _idPsicologo, UGEL = _ugel,
-                            Telefono = _telefono, Imagen = _imagen, Distrito = _distrito, Direccion = _direccion, Correo = _correo, Web = _web, Mapa = _mapa
+			update Sede set idColegio = _idColegio, idDistrito = _idDistrito, idUGEL = _idUGEL, 
+							idDirector = _idDirector, idTutorConvivencia = _idTutorConvivencia, idPsicologo = _idPsicologo,
+                            Telefono = _telefono, Direccion = _direccion, Correo = _correo, 
+                            Web = _web, Mapa = _mapa, Imagen = _imagen
 						where id = _id;
 			if ( row_count() = 0 ) then
 				select "Sede no esta registrada" as 'error';
@@ -213,7 +248,7 @@ create procedure sp_setSede(in _id int, in _idColegio int, in _idDirector int, i
     
 delimiter //
 create procedure sp_setDocente(in _id int, in _idSede int, in _nombres char(20), in _apellidoPaterno char(30), in _apellidoMaterno char(30), in _dni char(8),
-		in _passwordd char(20), in _fechaNacimiento date, in _correo char(100), in _telefono char(20), in _nivel char(1), in _cargo char(1), in _imagen char(50) )
+		in _passwordd char(20), in _fechaNacimiento date, in _correo char(100), in _telefono char(20), in _nivel char(1), in _cargo char(1), in _imagen text )
 	if ( _id = 0 ) then
 		begin
 			declare _count int;
@@ -299,7 +334,7 @@ create procedure sp_setApoderado(in _id int, in _nombres char(30), in _apellidoP
 delimiter //
 create procedure sp_setAlumno(in _id int, in _idGrupo int, in _idApoderado int, in _tipo char(1), in _nombres char(30), in _apellidoPaterno char(30), in _apellidoMaterno char(30),
 								 in _dni char(8), in _fechaNacimiento date, in _correo char(100), in _telefono char(20),
-                                 in _tikTok char(30), in _facebook char(30), in _whatsApp char(30), in _imagen char(50) )
+                                 in _tikTok char(50), in _facebook char(50), in _whatsApp char(50), in _imagen text )
 	if ( _id = 0 ) then
 		begin
 			declare _count int;
@@ -458,6 +493,6 @@ create procedure sp_getIndicencias(in _idSede int)
 -- call sp_getAlumnos(1)
 -- call sp_getAlumno(1)
 -- call sp_getAlumnoByDni('11223311')
--- call sp_getIndicenciasBySede(1)
+-- call sp_getIndicencias(1)
 
--- select * from Grupo
+-- select * from Colegio
